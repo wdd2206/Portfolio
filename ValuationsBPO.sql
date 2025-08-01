@@ -3,7 +3,7 @@ WITH FirstReviewOrAddendum AS (
     SELECT
         OrderDetailID,
         MIN(EnteredEvent) AS FirstEventDate
-    FROM [OrderWorkflowPerformance]
+    FROM [OWP]
     WHERE BusinessEventID = 14
       AND ActingEmployeeID <> 20137
       AND EnteredEvent >= DATEADD(MONTH, -6, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))
@@ -14,7 +14,7 @@ WITH FirstReviewOrAddendum AS (
 -- Step 2: Filter and prepare event data
 FilteredEvents AS (
     SELECT *
-    FROM [OrderWorkflowPerformance]
+    FROM [OWP]
     WHERE BusinessEventID IN (7,11,12,14,32,34,35,508,1131)
       AND EnteredEvent >= DATEADD(MONTH, -6, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))
       AND EnteredEvent < DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)
@@ -182,6 +182,6 @@ LEFT JOIN SummedDurations sd
 LEFT JOIN ValidSequences vs
     ON es.OrderDetailID = vs.OrderDetailID
     AND es.EnteredEvent = vs.Event14Time
-LEFT JOIN [OrderQueueWarehouse] oqw
+LEFT JOIN [oqw] oqw
     ON es.OrderDetailID = oqw.OrderDetailID
 
